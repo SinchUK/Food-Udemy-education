@@ -309,19 +309,17 @@ window.addEventListener("DOMContentLoaded", () => {
             display: block;
             margin: 0 auto;
           `;
-          form.append(statusMessage);
+          
           form.insertAdjacentElement('afterend', statusMessage); // метод альтернатива append();
 
-          const request = new XMLHttpRequest();
-          request.open('POST', 'server.php');
+         
 
           // request.setRequestHeader('Content-type', 'multipart/form-data');
           //При використанні XMLHttpRequest + FormData не потрібно встановлювати заголовки setRequestHeader вони встановлюються автоматично!!!
 
 
           //Якщо дані потрібно відправити у форматі JSON потрібно прописувати заголовки вручну.
-          request.setRequestHeader('Content-type', 'aplication/json');
-
+          
           const formData = new FormData(form);
 
           const obj = {};                       // якщо сервер приймає json
@@ -329,25 +327,27 @@ window.addEventListener("DOMContentLoaded", () => {
               obj[key] = value;
           });
 
-          const json = JSON.stringify(obj);     // якщо сервер приймає json
-
+          fetch('server.php', {
+            method: "POST",
+            headers: {
+                    'Content-type': 'application/json'
+                  },
+            body: JSON.stringify(obj)
+          }).then(data => data.text())
+            .then(data => {
+              console.log(data, ' data');
+              showThanksModal(message.success);
+              statusMessage.remove();
+          }).catch(() => {
+              showThanksModal(message.failure);
+          }).finally(() => {
+              form.reset();
+          });
 
           // request.send(formData); 
           // використовується якщо сервер приймає дані у форматі  FormData
-          request.send(json);                   // якщо сервер приймає json
+          // request.send(json);                   // якщо сервер приймає json
 
-          request.addEventListener('load', () => {
-            if (request.status === 200) {
-              console.log(request.response);
-              showThanksModal(message.success);
-              form.reset();
-              
-              statusMessage.remove();
-              
-            } else {
-              showThanksModal(message.failure);
-            }
-          });
       });
   }
 
