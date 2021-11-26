@@ -376,6 +376,7 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
 //Методи fetch() : text(), json()
+//приклад використання
     // fetch('https://jsonplaceholder.typicode.com/posts', {
     //     method: "POST",
     //     body: JSON.stringify({name: 'Alex'}),
